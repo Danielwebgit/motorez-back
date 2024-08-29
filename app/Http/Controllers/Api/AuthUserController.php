@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
 use App\Services\AuthUserService;
+use Illuminate\Http\Client\Request;
 
 class AuthUserController extends Controller
 {
@@ -24,5 +25,10 @@ class AuthUserController extends Controller
         } catch (\Exception $error) {
             return response()->json(['error' => $error->getMessage()], 422);
         }
+    }
+
+    public function logout()
+    {
+        return $this->authUserService->authUserLogout();
     }
 }

@@ -74,4 +74,10 @@ class AuthUserService
 
         ]);
     }
+
+    public function authUserLogout()
+    {
+        auth()->logout();
+        return response()->json(['message' => 'Deslogado com sucesso!']);
+    }
 }
