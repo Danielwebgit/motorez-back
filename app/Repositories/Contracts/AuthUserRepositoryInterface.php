@@ -4,5 +4,5 @@ namespace App\Repositories\Contracts;
 
 interface AuthUserRepositoryInterface
 {
-    public function authUserLogin($data);
+    public function saveSessionAndRefreshToken($sessionId, $refreshToken);
 }

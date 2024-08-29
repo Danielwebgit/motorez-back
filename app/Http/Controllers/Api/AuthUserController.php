@@ -9,17 +9,20 @@ use App\Services\AuthUserService;
 class AuthUserController extends Controller
 {
 
-    public function __construct(private AuthUserService $authUserService)
-    {}
+    public function __construct(private AuthUserService $authUserService) {}
 
     /**
      * Display a listing of the resource.
      */
     public function login(UserRequest $request)
     {
-        $response = $this->authUserService->authUserLogin($request);
-        return response()->json([$response]);
+        try {
+
+            $response = $this->authUserService->authUserLogin($request);
+
+            return response()->json($response);
+        } catch (\Exception $error) {
+            return response()->json(['error' => $error->getMessage()], 422);
+        }
     }
-
-
 }

@@ -11,10 +11,9 @@ class AuthUserRepository implements AuthUserRepositoryInterface
     {
     }
 
-    public function authUserLogin($data)
+    public function saveSessionAndRefreshToken($sessionId, $refreshToken)
     {
-        dd("Fazendo login");
+        return $this->model->query()->update(['session_id' => $sessionId, 'refresh_token' => $refreshToken]);
     }
 
-   
 }
