@@ -5,12 +5,12 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
 use App\Services\AuthUserService;
-use Illuminate\Http\Client\Request;
 
 class AuthUserController extends Controller
 {
 
-    public function __construct(private AuthUserService $authUserService) {}
+    public function __construct(private AuthUserService $authUserService) 
+    {}
 
     /**
      * Display a listing of the resource.

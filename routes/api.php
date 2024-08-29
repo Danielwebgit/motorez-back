@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthUserController;
+use App\Http\Controllers\Api\VehiclesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
@@ -18,5 +19,14 @@ Route::middleware([InitializeTenancyByDomain::class,PreventAccessFromCentralDoma
             });
             
         });
+
+        Route::group(['middleware' => ['apiJwt']], function () {
+
+            Route::prefix('/vehicles')->group(function () {
+                Route::get('/', [VehiclesController::class, 'fetchAllVehicles']);
+            });
+
+        });
+     
     });
 });

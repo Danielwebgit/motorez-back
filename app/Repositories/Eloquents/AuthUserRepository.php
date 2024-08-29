@@ -7,9 +7,10 @@ use App\Repositories\Contracts\AuthUserRepositoryInterface;
 
 class AuthUserRepository implements AuthUserRepositoryInterface
 {
-    public function __construct(protected User $model)
-    {
-    }
+    public function __construct(
+        protected User $model
+        )
+    {}
 
     public function saveSessionAndRefreshToken($sessionId, $refreshToken)
     {
