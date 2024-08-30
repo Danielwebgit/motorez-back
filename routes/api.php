@@ -30,3 +30,11 @@ Route::middleware([InitializeTenancyByDomain::class,PreventAccessFromCentralDoma
      
     });
 });
+
+
+Route::prefix('v1')->group(function () {
+    
+    Route::prefix('/auth/user/main')->group(function () {
+        Route::post('/login', [AuthUserController::class, 'login']);
+    });
+});
