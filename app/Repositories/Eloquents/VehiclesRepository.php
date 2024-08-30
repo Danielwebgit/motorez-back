@@ -17,7 +17,7 @@ class VehiclesRepository implements VehiclesRepositoryInterface
     public function fetchAllVehicles()
     {
         $page = Request::query('page') ?? request('page', 1);
-        $perPage = 5;
+        $perPage = 8;
         $searchBrandOrModel = Request::query('brandOrModel') ?? "";
         $yearSearch = Request::query('year') ?? "";
         $versionSearch = Request::query('version') ?? "";

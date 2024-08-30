@@ -35,9 +35,12 @@ Route::middleware([InitializeTenancyByDomain::class,PreventAccessFromCentralDoma
 
 Route::prefix('v1')->group(function () {
     
-    Route::prefix('/auth/user/main')->group(function () {
+    Route::prefix('/auth/user')->group(function () {
         Route::post('/login', [AuthUserController::class, 'login']);
         Route::post('/refresh-token', [AuthUserController::class, 'refreshToken']);
+        Route::group(['middleware' => ['apiJwt']], function () {
+            Route::post('/logout', [AuthUserController::class, 'logout']);
+        });
     });
 
     Route::group(['middleware' => ['apiJwt']], function () {

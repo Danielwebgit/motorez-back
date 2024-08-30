@@ -20,14 +20,14 @@ class apiProtectedRoute
         try {
 
             JWTAuth::parseToken()->authenticate();
-            $tokenTenantId = JWTAuth::getPayload()->get('tenant_id');
-            $currentTenantId = $request->get('tenant_id'); 
             
+            $tokenTenantId = JWTAuth::getPayload()->get('tenant_id');
+
             $host = FacadesRequest::getHost();
             $currentTenantId = explode('.', $host)[0];
-           
+
             if ($tokenTenantId !== $currentTenantId) {
-                return response()->json(['error' => 'Invalid tenant'], 401);
+                return response()->json(['error' => 'Token is Invalid'], 401);
             }
 
         } catch (\Exception $e) {
@@ -37,7 +37,10 @@ class apiProtectedRoute
                     response()->json(['status' => 'Token is Invalid'], 401),
                 $e instanceof \Tymon\JWTAuth\Exceptions\TokenExpiredException => 
                     response()->json(['status' => 'Token is Expired'], 401),
-                default =>  response()->json(['status' => 'Authorization Token not found']),
+                $e instanceof \Tymon\JWTAuth\Exceptions\JWTException => 
+                    response()->json(['status' => 'Authorization Token not found'], 401),
+                default => 
+                    response()->json(['status' => 'An error occurred while processing the token'], 500),
             };
         }
         
