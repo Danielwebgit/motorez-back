@@ -3,9 +3,9 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Auth;
-
 use App\Repositories\Eloquents\AuthUserRepository;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Facades\JWTFactory;
 use Illuminate\Support\Str;
@@ -37,7 +37,11 @@ class AuthUserService
 
         $expiresAt = Carbon::now()->addDays(30);
 
+        $host = Request::getHost();
+        $subdomain = explode('.', $host)[0];
+
         $customClaims = [
+            'tenant_id' => $subdomain,
             'iss' => url('/api/v1/auth/user/login'),
             'sub' => $user->getAuthIdentifier(),
             'exp' => $expiresAt->timestamp,

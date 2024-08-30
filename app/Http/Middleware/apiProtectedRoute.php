@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request as FacadesRequest;
 use Symfony\Component\HttpFoundation\Response;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -19,6 +20,15 @@ class apiProtectedRoute
         try {
 
             JWTAuth::parseToken()->authenticate();
+            $tokenTenantId = JWTAuth::getPayload()->get('tenant_id');
+            $currentTenantId = $request->get('tenant_id'); 
+            
+            $host = FacadesRequest::getHost();
+            $currentTenantId = explode('.', $host)[0];
+           
+            if ($tokenTenantId !== $currentTenantId) {
+                return response()->json(['error' => 'Invalid tenant'], 401);
+            }
 
         } catch (\Exception $e) {
 
