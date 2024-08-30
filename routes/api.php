@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthUserController;
+use App\Http\Controllers\Api\TenantController;
 use App\Http\Controllers\Api\VehiclesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -36,5 +37,11 @@ Route::prefix('v1')->group(function () {
     
     Route::prefix('/auth/user/main')->group(function () {
         Route::post('/login', [AuthUserController::class, 'login']);
+    });
+
+    Route::group(['middleware' => ['apiJwt']], function () {
+        Route::prefix('/tenants')->group(function () {
+            Route::get('/', [TenantController::class, 'fetchAllTenants']);
+        });
     });
 });
