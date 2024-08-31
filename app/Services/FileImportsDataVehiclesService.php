@@ -6,6 +6,7 @@ use App\Jobs\ProcessVehiclesJob;
 use App\Repositories\Eloquents\VehiclesRepository;
 use DateTime;
 use Exception;
+use Illuminate\Support\Facades\Request;
 
 class FileImportsDataVehiclesService
 {
@@ -38,6 +39,8 @@ class FileImportsDataVehiclesService
 
         $veiculoData = [];
 
+        $suppliersId = Request::query('suppliers_id');
+
         foreach ($veiculos as $key => $veiculo) {
 
             $veiculoData[] = [
@@ -51,6 +54,7 @@ class FileImportsDataVehiclesService
                 'doors' => $veiculo['portas'] ?? null,
                 'price' => $veiculo['preco'] ?? $veiculo['precoVenda'] ?? null,
                 'date' => $veiculo['date'] ?? $this->convertDateFormatToTimestamp($veiculo['ultimaAtualizacao']) ?? null,
+                'suppliers_id' => $suppliersId
             ];
 
             $this->checkRequiredAttributes($veiculoData[$key]);

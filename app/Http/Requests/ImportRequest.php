@@ -22,6 +22,7 @@ class ImportRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'suppliers_id' => 'required|string',
             'file' => 'required|mimes:xml,json|max:1500'
         ];
     }
