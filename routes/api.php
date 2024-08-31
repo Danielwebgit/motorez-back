@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthUserController;
 use App\Http\Controllers\Api\FileImportsDataVehiclesController;
+use App\Http\Controllers\Api\SuppliersController;
 use App\Http\Controllers\Api\TenantController;
 use App\Http\Controllers\Api\VehiclesController;
 use Illuminate\Http\Request;
@@ -27,6 +28,10 @@ Route::middleware([InitializeTenancyByDomain::class,PreventAccessFromCentralDoma
             Route::prefix('/vehicles')->group(function () {
                 Route::get('/', [VehiclesController::class, 'fetchAllVehicles']);
                 Route::post('/file-imports-data-vehicles', [FileImportsDataVehiclesController::class, 'fileImportsDataVehicles']);
+            });
+
+            Route::prefix('/suppliers')->group(function () {
+                Route::get('/', [SuppliersController::class, 'fetchAllSuppliers']);
             });
 
         });
