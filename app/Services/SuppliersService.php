@@ -10,6 +10,11 @@ class SuppliersService
         private SuppliersRepository $suppliersRepository
     ) {}
 
+    public function storeSupplier($formSupplier)
+    {
+        return $this->suppliersRepository->storeSupplier($formSupplier);
+    }
+
     public function fetchAllSuppliers()
     {
         return $this->suppliersRepository->fetchAllSuppliers();

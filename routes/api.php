@@ -32,6 +32,7 @@ Route::middleware([InitializeTenancyByDomain::class,PreventAccessFromCentralDoma
 
             Route::prefix('/suppliers')->group(function () {
                 Route::get('/', [SuppliersController::class, 'fetchAllSuppliers']);
+                Route::post('/store', [SuppliersController::class, 'storeSupplier']);
             });
 
         });

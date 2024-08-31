@@ -14,8 +14,6 @@ return new class extends Migration
         Schema::create('suppliers', function (Blueprint $table) {
             $table->id();
             $table->string('name', 45);
-            $table->string('api_endpoint')->nullable();
-            $table->string('data_format', 8);
             $table->timestamps();
         });
     }

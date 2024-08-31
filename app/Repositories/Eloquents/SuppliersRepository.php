@@ -11,6 +11,11 @@ class SuppliersRepository implements SuppliersRepositoryInterface
         protected Supplier $model
     ) {}
 
+    public function storeSupplier($formSupplier)
+    {
+        return $this->model->query()->create(['name' => $formSupplier['name']]);
+    }
+
     public function fetchAllSuppliers()
     {
         return $this->model->query()->with('vehicles')->get();
