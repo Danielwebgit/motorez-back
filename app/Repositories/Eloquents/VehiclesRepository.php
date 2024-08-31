@@ -86,4 +86,9 @@ class VehiclesRepository implements VehiclesRepositoryInterface
 
         return $paginatedData;
     }
+
+    public function importDataVehicles(array $data, $extension)
+    {
+        $data = $data;
+    }
 }
