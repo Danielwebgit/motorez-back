@@ -14,4 +14,14 @@ class VehiclesService
     {
         return $this->vehiclesRepository->fetchAllVehicles();
     }
+
+    public function updateVehicle($formVehicle, $vehicleId)
+    {
+        return $this->vehiclesRepository->updateVehicle($formVehicle, $vehicleId);
+    }
+
+    public function deleteVehicle($vehicleId)
+    {
+        return $this->vehiclesRepository->deleteVehicle($vehicleId);
+    }
 }

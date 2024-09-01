@@ -44,7 +44,7 @@ class FileImportsDataVehiclesService
         foreach ($veiculos as $key => $veiculo) {
 
             $veiculoData[] = [
-                'id' => $veiculo['id'] ?? $veiculo['codigoVeiculo'] ?? null,
+                'code' => $veiculo['id'] ?? $veiculo['codigoVeiculo'] ?? null,
                 'brand' => $veiculo['marca'] ?? $veiculo['marca'] ?? null,
                 'model' => $veiculo['modelo'] ?? $veiculo['modelo'] ?? null,
                 'year' => $veiculo['ano'] ?? $veiculo['year'] ?? null,

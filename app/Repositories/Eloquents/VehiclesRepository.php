@@ -2,11 +2,14 @@
 
 namespace App\Repositories\Eloquents;
 
+use App\Http\Resources\VehicleResource;
 use App\Models\Vehicle;
 use App\Repositories\Contracts\VehiclesRepositoryInterface;
+use Exception;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Log;
 
 class VehiclesRepository implements VehiclesRepositoryInterface
 {
@@ -26,7 +29,7 @@ class VehiclesRepository implements VehiclesRepositoryInterface
         $suppliersIdSearch = Request::query('suppliers_id') ?? "";
         $dateRegistre = Request::query('created_at') ?? "";
 
-        $query = $this->model->query();
+        $query = $this->model->query()->with('supplier');
 
         if ($searchBrandOrModel) {
 
@@ -75,16 +78,51 @@ class VehiclesRepository implements VehiclesRepositoryInterface
         }
 
         $vehicles = $query->orderBy('id', 'asc')->get();
-
+        $vehiclesResource = VehicleResource::collection($vehicles);
         $paginatedData = new LengthAwarePaginator(
-            $vehicles->forPage($page, $perPage),
-            $vehicles->count(),
+            $vehiclesResource->forPage($page, $perPage),
+            $vehiclesResource->count(),
             $perPage,
             $page,
             ['path' => Paginator::resolveCurrentPath()]
         );
 
         return $paginatedData;
+    }
+
+    public function updateVehicle($formVehicle, $vehicleId)
+    {
+        try {
+
+            if ($supplier = $this->model->query()->find($vehicleId)) {
+                $supplier->brand = $formVehicle['brand'];
+                $supplier->model = $formVehicle['model'];
+                $supplier->save();
+
+                return response()->json(['msg' => 'Veículo atualizado!']);
+            } 
+            
+            return response()->json(['msg' => 'Veículo atualizado!']);
+            
+        } catch (Exception $e) {
+            Log::critical($e->getMessage());
+        }
+    }
+
+    public function deleteVehicle($vehicleId)
+    {
+        try {
+
+            if ($this->model->query()->find($vehicleId)->delete())
+            {
+                return response()->json(['msg' => 'Veículo deletado!']);
+            }
+
+            return response()->json(['msg' => 'Veículo não encontrado']);
+
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
     }
 
     public function importDataVehicles(array $data, $extension)

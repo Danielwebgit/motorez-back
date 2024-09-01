@@ -10,13 +10,24 @@ class SuppliersService
         private SuppliersRepository $suppliersRepository
     ) {}
 
-    public function storeSupplier($formSupplier)
-    {
-        return $this->suppliersRepository->storeSupplier($formSupplier);
-    }
-
     public function fetchAllSuppliers()
     {
         return $this->suppliersRepository->fetchAllSuppliers();
     }
+
+    public function storeSupplier($formSupplier)
+    {
+        return $this->suppliersRepository->storeSupplier($formSupplier);
+    }
+    
+    public function updateSupplier($formSupplier, $supplierId)
+    {
+        return $this->suppliersRepository->updateSupplier($formSupplier, $supplierId);
+    }
+
+    public function deleteSupplier($supplierId)
+    {
+        return $this->suppliersRepository->deleteSupplier($supplierId);
+    }
+
 }
