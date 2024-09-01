@@ -9,6 +9,8 @@ class Supplier extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['name'];
+    
     public function Vehicles()
     {
         return $this->hasMany(Vehicle::class, 'suppliers_id', 'id');
