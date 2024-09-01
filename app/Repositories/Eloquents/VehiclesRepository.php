@@ -129,4 +129,9 @@ class VehiclesRepository implements VehiclesRepositoryInterface
     {
         $data = $data;
     }
+
+    public function verifyRegisteredCode($codeVehicle)
+    {
+        return $this->model->query()->where('code', $codeVehicle)->exists();
+    }
 }

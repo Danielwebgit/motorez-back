@@ -29,8 +29,31 @@ class FileImportsDataVehiclesService
             $data = json_decode(json_encode($xml), true);
         }
 
-        $veiculoDatas = $this->ProcessXmlAndJsonDataToTheBankStandard($data);
-        ProcessVehiclesJob::dispatch($veiculoDatas, $batchSize);
+        $ProcessData = $this->ProcessXmlAndJsonDataToTheBankStandard($data);
+
+        if (isset($ProcessData['error'])) {
+
+            return response()->json(['msg' => $ProcessData['error']]);
+
+        } else {
+
+            if (count($ProcessData['veiculoData']) === 0) {
+                
+                return response()->json([
+                    'msg' => 'Veículos já cadastrados verifique os códigos abaixo!', 
+                    'registered_codes' => $ProcessData['vehiclesCodeRegistred']
+            ]);
+
+            } else {
+
+                ProcessVehiclesJob::dispatch($ProcessData['veiculoData'], $batchSize);
+
+                return response()->json([
+                    'msg' => 'Veículos adicionado com sucesso', 
+                    'registered_codes' => $ProcessData['vehiclesCodeRegistred']
+                ]);
+            }
+        }
     }
 
     public function processXmlAndJsonDataToTheBankStandard($data)
@@ -38,29 +61,44 @@ class FileImportsDataVehiclesService
         $veiculos = $data['veiculos']['veiculo'] ?? $data['veiculos'] ?? [];
 
         $veiculoData = [];
-
+        $vehiclesCodeRegistred = [];
+        $key = 0;
         $suppliersId = Request::query('suppliers_id');
 
-        foreach ($veiculos as $key => $veiculo) {
+        foreach ($veiculos as $veiculo) {
 
-            $veiculoData[] = [
-                'code' => $veiculo['id'] ?? $veiculo['codigoVeiculo'] ?? null,
-                'brand' => $veiculo['marca'] ?? $veiculo['marca'] ?? null,
-                'model' => $veiculo['modelo'] ?? $veiculo['modelo'] ?? null,
-                'year' => $veiculo['ano'] ?? $veiculo['year'] ?? null,
-                'version' => $veiculo['versao'] ?? null,
-                'mileage' => $veiculo['km'] ?? $veiculo['quilometragem'] ?? null,
-                'fuel' => $veiculo['combustivel'] ?? $veiculo['tipoCombustivel'] ?? null,
-                'doors' => $veiculo['portas'] ?? null,
-                'price' => $veiculo['preco'] ?? $veiculo['precoVenda'] ?? null,
-                'date' => $veiculo['date'] ?? $this->convertDateFormatToTimestamp($veiculo['ultimaAtualizacao']) ?? null,
-                'suppliers_id' => $suppliersId
-            ];
+            if ($this->verifyRegisteredCode($veiculo['id'] ?? $veiculo['codigoVeiculo'])) {
+                $vehiclesCodeRegistred[] = $veiculo['id'] ?? $veiculo['codigoVeiculo'];
+                
+            } else {
 
-            $this->checkRequiredAttributes($veiculoData[$key]);
+                $veiculoData[] = [
+                    'code' => $veiculo['id'] ?? $veiculo['codigoVeiculo'] ?? null,
+                    'brand' => $veiculo['marca'] ?? $veiculo['marca'] ?? null,
+                    'model' => $veiculo['modelo'] ?? $veiculo['modelo'] ?? null,
+                    'year' => $veiculo['ano'] ?? $veiculo['year'] ?? null,
+                    'version' => $veiculo['versao'] ?? null,
+                    'mileage' => $veiculo['km'] ?? $veiculo['quilometragem'] ?? null,
+                    'fuel' => $veiculo['combustivel'] ?? $veiculo['tipoCombustivel'] ?? null,
+                    'doors' => $veiculo['portas'] ?? null,
+                    'price' => $veiculo['preco'] ?? $veiculo['precoVenda'] ?? null,
+                    'date' => $veiculo['date'] ?? $this->convertDateFormatToTimestamp($veiculo['ultimaAtualizacao']) ?? null,
+                    'suppliers_id' => $suppliersId
+                ];
+                
+                if (! $this->checkRequiredAttributes($veiculoData[$key])) {
+
+                    return  ['error' => 'Campos obrigatórios: Marca, Modelo, Ano, Combustível, preço e kilometragem'];
+                }
+
+                $key = $key + 1;
+            }
         }
-
-        return $veiculoData;
+       
+        return [
+            'veiculoData' => $veiculoData,
+            'vehiclesCodeRegistred' => $vehiclesCodeRegistred
+        ];
     }
 
     public function convertDateFormatToTimestamp($dateTime)
@@ -78,5 +116,10 @@ class FileImportsDataVehiclesService
     {
         return $veiculoData['brand'] && $veiculoData['model'] && $veiculoData['year'] &&
             $veiculoData['fuel'] && $veiculoData['price'] && $veiculoData['mileage'];
+    }
+
+    public function verifyRegisteredCode($codeVehicle)
+    {
+        return $this->vehicleRepository->verifyRegisteredCode($codeVehicle);
     }
 }
