@@ -18,7 +18,7 @@ class FileImportsDataVehiclesService
     {
         $batchSize = 10;
 
-        $file = $data->file('file');
+        $file = isset($data['file']) ? $data['file'] : $data->file('file');
         $extension = $file->getClientOriginalExtension();
         $data = [];
 

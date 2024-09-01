@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('year', false, 4);
             $table->string('version', 20);
             $table->string('mileage', 10);
-            $table->string('fuel', 20);
+            $table->string('fuel', 20)->nullable();
             $table->integer('doors', false, 1);
             $table->decimal('price', 10, 2);
             $table->timestamp('date');
