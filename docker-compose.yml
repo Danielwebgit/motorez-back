@@ -6,6 +6,7 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
+        platform: linux/arm64/v8
         restart: unless-stopped
         working_dir: /var/www/
         volumes:
