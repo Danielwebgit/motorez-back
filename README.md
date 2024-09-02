@@ -1,11 +1,20 @@
-# Teste prático
+![Screenshot: Running tests on VS Code](docs/img/motorez-logo.png)
+
+# Teste prático para a trabalhar na empresa
 ## Integração de Estoque de Veículos de Terceiros
 
 Imagine que você trabalhe para uma startup que precisa integrar o estoque de veículos dos
 seus clientes. O sistema deve periodicamente coletar os dados de veículos de várias fontes
 diferentes (Webmotors, OLX, etc.) e internamente padroniza esses dados em uma base
 própria para uso em análises e exibição.
+
+Neste texto, explico o raciocínio por trás da solução proposta para o teste, com base em alguns pontos cruciais. Considerando que cada cliente (tenant) terá seus próprios veículos e integrações, e que estamos lidando com um sistema SaaS (Software as a Service), a estrutura da aplicação exige uma análise e planejamento mais cuidadosos.
+
+Um sistema SaaS não é uma aplicação comum. Ele deve ser projetado para funcionar como um serviço alugado para múltiplos clientes, cada um com suas próprias necessidades e dados isolados. Diante disso, é necessário decidir entre duas abordagens principais para o armazenamento de dados dos clientes: o uso de um único banco de dados compartilhado (single database) ou múltiplos bancos de dados separados (multi-database).
+
+No contexto deste desafio, onde o sistema deve mapear e converter os dados de cada fornecedor para um formato padronizado em uma base própria, optei por implementar uma arquitetura de múltiplos bancos de dados. Essa abordagem garante que cada cliente tenha sua própria base de dados, separada dos demais, proporcionando maior segurança e flexibilidade na gestão dos dados.
 ## Back End
+#### Link do [`FrontEnd em Nextjs - V14`](https://github.com/Danielwebgit/motorez-front)
 
 1. **Mult Database**  
    Implementação de suporte a múltiplos bancos de dados.
@@ -39,16 +48,6 @@ própria para uso em análises e exibição.
 
 ---
 
-## Front End
-
-**Tecnologias e Bibliotecas Usadas no Front End:**
-- [`nextui-org`](https://nextui.org/): Biblioteca de UI para Next.js.
-- [`sweetalert2`](https://sweetalert2.github.io/): Biblioteca para exibição de alertas.
-- [`react-hook-form`](https://react-hook-form.com/): Biblioteca para gerenciamento de formulários em React.
-- [`nookies`](https://github.com/hoangvvo/nookies): Manipulação de cookies no Next.js.
-- [`axios`](https://axios-http.com/): Cliente HTTP para fazer requisições.
-- [`@svgr/webpack`](https://github.com/gregberge/svgr/tree/master/packages/webpack): Transformação de SVGs em componentes React.
-- [`react-toastify`](https://fkhadra.github.io/react-toastify/): Biblioteca para exibição de notificações toast.
 
 **Comandos e Configurações:**
 - **Execução de Migrações e Seeders para Tenants:**  
