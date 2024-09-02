@@ -50,6 +50,23 @@ No contexto deste desafio, onde o sistema deve mapear e converter os dados de ca
 
 
 **Comandos e Configurações:**
-- **Execução de Migrações e Seeders para Tenants:**  
+
+- **Execução dos containers dockers:**  
   ```bash
-  php artisan tenancy:migrate --tenants=foo,bar
+     docker compose up -d --build
+
+- **Acessando o container do projeto para rodar os próximos comandos:**  
+  ```bash
+     docker exec -it motorez-back-motorez-1 bash
+
+- **Execução de Migrações e Seeders para o usuário central:**  
+  ```bash
+  php artisan db:seed UsersSeeder
+
+- **Execução de Migrações e Seeders para Tenants:**
+  ```bash
+  php artisan db:seed TenantsWithDomainsSeeder
+
+- **Execução de Teste Unitário desenvolvido para testar a importação dos documentos xml e json:**
+    ```bash
+  php artisan test --filter=FileImportsDataVehiclesServiceTest
