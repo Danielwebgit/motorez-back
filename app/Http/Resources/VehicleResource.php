@@ -17,6 +17,7 @@ class VehicleResource extends JsonResource
         return  [
 
             'id' => $this->id,
+            'code' => $this->code,
             'brand' => $this->brand,
             'model' => $this->model,
             'year' => $this->year,

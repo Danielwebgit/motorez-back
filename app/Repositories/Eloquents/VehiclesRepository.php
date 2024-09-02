@@ -84,7 +84,7 @@ class VehiclesRepository implements VehiclesRepositoryInterface
             $vehiclesResource->count(),
             $perPage,
             $page,
-            ['path' => str_replace("http://", "https://", Paginator::resolveCurrentPath())]);
+            ['path' => Paginator::resolveCurrentPath()]);
 
         return $paginatedData;
     }
